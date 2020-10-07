@@ -12,6 +12,15 @@ RUN apt-get update -qq
 RUN apt-get install -y --no-install-recommends nodejs postgresql-client \
       locales yarn
 
+RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
+RUN locale-gen
+RUN export LC_ALL="en_US.utf8"
+
 RUN mkdir -p $INSTALL_PATH
 
 WORKDIR $INSTALL_PATH
+COPY Gemfile Gemfile
+COPY Gemfile.lock Gemfile.lock
+RUN bundle install
+
+COPY . $INSTALL_PATH
